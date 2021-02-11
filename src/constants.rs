@@ -6,7 +6,7 @@ pub(crate) const ELAPSED_MILLIS: &str = "elapsed_time_ms";
 pub(crate) const TIME_SINCE_START: &str = "time_since_span_entered_ms";
 
 /// Type of the span
-pub(crate) const TYPE: &str = "type";
+pub(crate) const TYPE: &str = "span.type";
 
 // Span Metadata
 pub(crate) const LEVEL: &str = "level";
