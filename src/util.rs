@@ -63,6 +63,7 @@ pub(crate) fn insert_core_fields(
         if let Some(module) = metadata.module_path() {
             obj.insert(MODULE, module)?;
         }
+        obj.insert(TARGET, metadata.target())?;
     }
     Ok(())
 }
@@ -78,7 +79,8 @@ pub(crate) fn serialize_span(
     };
     insert_core_fields(&mut attributes, metadata, &msg)?;
     attributes.insert(TYPE, span_type.as_str())?;
-    attributes.insert(TARGET, metadata.target())?;
+    // We remove the message, because we have added in our custom `msg` property
+    attributes.remove("message");
 
     // I'd like to shrink this down, but it seems better to be safe than sorry?
     let mut buffer = Vec::with_capacity(1024);
@@ -89,18 +91,21 @@ pub(crate) fn serialize_span(
 
 /// # Example
 ///
-/// `[START] LOGIN_HANDLER`
+/// `[LOGIN_HANDLER | START]`
 pub(crate) fn format_span_context(metadata: &Metadata, span_type: Type) -> String {
-    format!(
-        "[{}] {}",
-        span_type.as_msg(),
-        metadata.name().to_uppercase()
-    )
+    match span_type {
+        Type::Enter | Type::Exit => format!(
+            "[{} | {}]",
+            metadata.name().to_uppercase(),
+            span_type.as_msg()
+        ),
+        Type::Event => format!("[{}]", span_type.as_msg()),
+    }
 }
 
 /// # Example
 ///
-/// `[START] LOGIN_HANDLER | Received request to log in.`
+/// `[EVENT] Received request to log in.`
 pub(crate) fn format_event_message(metadata: &Metadata, attributes: &JsonValue) -> String {
     // Extract the "message" field, if provided. Fallback to the target, if missing.
     let message = if let Some(message) = attributes["message"].as_str() {
@@ -111,7 +116,7 @@ pub(crate) fn format_event_message(metadata: &Metadata, attributes: &JsonValue) 
 
     // If the event is in the context of a span, prepend the span name to the message.
     return format!(
-        "{} | {}",
+        "{} {}",
         &format_span_context(metadata, Type::Event),
         message
     );
