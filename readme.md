@@ -10,14 +10,14 @@
 
 </div>
 
-Heavily inspired by [Tracing Bunyan Formatter](https://github.com/LukeMathWalker/tracing-bunyan-formatter), however it's just had some of the internals and formatting (and rules surrounding it) changed.
+Heavily inspired by [Tracing Bunyan Formatter](https://github.com/LukeMathWalker/tracing-bunyan-formatter), just with some slight tweaks to the internals and the formatting. The actual formatting doesn't follow any defined specification, it's just something I view as readable and useful - I'm open to suggestions if people would like it aligned to a specific format.
 
 ## Features
 
 - All traces will receive their parent's attributes as well as their own, child attributes will take precedence if there are collisions
 - There is a very minimal timing capability that adds elapsed time to `EVENT` and `EXIT` traces
   `TRACE`, `DEBUG` and `ERROR` logs get slighly more metadata (file name, line number, module path & target) attached to them
-- Avoids panics - as much as possible it opts to handle failure by eprintlning to stdout. These scenarios should be few and far between, but it's better that a failure in your tracing implementation doesn't poison your main application.
+- Avoids panics - as much as possible it opts to handle failure by `eprintln`ing to `stdout`. These scenarios should be few and far between, but it's better that a failure in your tracing implementation doesn't poison your main application. _(although ideally it shouldn't fail silently)_
 
 All traces will receive their parent's attributes as well as their own, there is also a very minimal timing capability that adds elapsed time to `Event` and `Exit` traces
 
