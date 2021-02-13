@@ -6,6 +6,7 @@
   <p>
 
 [![crates.io](https://img.shields.io/crates/v/tracing_sprout?label=latest)](https://crates.io/crates/tracing_sprout)
+[![docs](https://docs.rs/tracing_sprout/badge.svg)]
 ![MIT](https://img.shields.io/github/license/naamancurtis/tracing-sprout)
 
 </div>
