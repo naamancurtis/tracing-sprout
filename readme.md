@@ -6,8 +6,9 @@
   <p>
 
 [![crates.io](https://img.shields.io/crates/v/tracing_sprout?label=latest)](https://crates.io/crates/tracing_sprout)
-[![docs](https://docs.rs/tracing_sprout/badge.svg)]
-![MIT](https://img.shields.io/github/license/naamancurtis/tracing-sprout)
+[![docs](https://docs.rs/tracing_sprout/badge.svg)](https://docs.rs/tracing_sprout/latest/tracing_sprout/)
+[![repo](https://img.shields.io/badge/github-code-black)](https://github.com/naamancurtis/tracing-sprout)
+[![MIT](https://img.shields.io/github/license/naamancurtis/tracing-sprout)](https://github.com/naamancurtis/tracing-sprout/blob/main/LICENSE)
 
 </div>
 
