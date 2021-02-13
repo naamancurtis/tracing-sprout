@@ -8,6 +8,8 @@
 [![crates.io](https://img.shields.io/crates/v/tracing_sprout?label=latest)](https://crates.io/crates/tracing_sprout)
 ![MIT](https://img.shields.io/github/license/naamancurtis/tracing-sprout)
 
+</div>
+
 Heavily inspired by [Tracing Bunyan Formatter](https://github.com/LukeMathWalker/tracing-bunyan-formatter), however it's just had some of the internals and formatting (and rules surrounding it) changed.
 
 ## Features
