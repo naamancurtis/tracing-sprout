@@ -13,6 +13,25 @@ use crate::storage::SproutStorage;
 use crate::util::{serialize_span, Type};
 use crate::Result;
 
+/// The subscriber layer, add this to your application's tracing regisitry to initialize it
+///
+///
+/// # Example
+///
+/// ```no_run
+/// use tracing::{subscriber::set_global_default, Subscriber};
+/// use tracing_sprout::TrunkLayer;
+/// use tracing_subscriber::prelude::*;
+/// use tracing_subscriber::{EnvFilter, Registry};
+///
+/// let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
+/// let formatting_layer = TrunkLayer::new("My Application".to_string(), std::io::stdout);
+/// let subscriber = Registry::default()
+///      .with(env_filter)
+///      .with(formatting_layer);
+///
+/// set_global_default(subscriber).expect("failed to set up global tracing subscriber")
+/// ```
 pub struct TrunkLayer<W: MakeWriter + 'static> {
     writer: W,
     pid: u32,
@@ -23,6 +42,15 @@ impl<W> TrunkLayer<W>
 where
     W: MakeWriter + 'static,
 {
+    /// Construct a new TrunkLayer to add to the Tracing Registry
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use tracing_sprout::TrunkLayer;
+    ///
+    /// let layer = TrunkLayer::new("I am Groot".to_string(), std::io::stdout);
+    /// ```
     pub fn new(name: String, writer: W) -> Self {
         Self {
             writer,

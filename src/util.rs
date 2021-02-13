@@ -2,6 +2,8 @@ use chrono::prelude::*;
 use json::JsonValue;
 use tracing_core::metadata::{Level, Metadata};
 
+use std::thread;
+
 use crate::constants::*;
 use crate::Result;
 
@@ -53,7 +55,7 @@ pub(crate) fn insert_core_fields(
     obj.insert(MESSAGE, msg)?;
     obj.insert(LEVEL, level_as_str(level))?;
 
-    if matches!(*level, Level::TRACE | Level::WARN | Level::ERROR) {
+    if matches!(*level, Level::TRACE | Level::DEBUG | Level::ERROR) {
         if let Some(file) = metadata.file() {
             obj.insert(FILE, file)?;
         }
@@ -64,6 +66,9 @@ pub(crate) fn insert_core_fields(
             obj.insert(MODULE, module)?;
         }
         obj.insert(TARGET, metadata.target())?;
+        let t = thread::current();
+        obj.insert(THREAD_ID, format!("{:?}", t.id()))?;
+        obj.insert(THREAD_NAME, t.name().unwrap_or(""))?;
     }
     Ok(())
 }

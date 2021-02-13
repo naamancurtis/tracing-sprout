@@ -14,3 +14,5 @@ pub(crate) const FILE: &str = "file";
 pub(crate) const LINE: &str = "line";
 pub(crate) const TARGET: &str = "target";
 pub(crate) const MODULE: &str = "module";
+pub(crate) const THREAD_ID: &str = "thread_id";
+pub(crate) const THREAD_NAME: &str = "thread_name";

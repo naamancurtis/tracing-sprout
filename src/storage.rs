@@ -84,12 +84,12 @@ impl Visit for SproutStorage {
             name if name.starts_with("log.") => (),
             name if name.starts_with("r#") => {
                 self.attributes
-                    .insert(&name[2..], format!("{:?}", value))
+                    .insert(&name[2..], format!("{:?}", value).as_str())
                     .expect("Root should always be a json object");
             }
             name => {
                 self.attributes
-                    .insert(name, format!("{:?}", value))
+                    .insert(name, format!("{:?}", value).as_str())
                     .expect("Root should always be a json object");
             }
         };
