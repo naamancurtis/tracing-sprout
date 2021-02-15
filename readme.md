@@ -18,7 +18,7 @@ Heavily inspired by [Tracing Bunyan Formatter](https://github.com/LukeMathWalker
 
 - All traces will receive their parent's attributes as well as their own, child attributes will take precedence if there are collisions
 - There is a very minimal timing capability that adds elapsed time to `EVENT` and `EXIT` traces
-  `TRACE`, `DEBUG` and `ERROR` logs get slighly more metadata (file name, line number, module path & target) attached to them
+- `TRACE`, `DEBUG` and `ERROR` logs get slightly more metadata _(file name, line number, module path & target)_ attached to them
 - Avoids panics - as much as possible it opts to handle failure by `eprintln`ing to `stdout`. These scenarios should be few and far between, but it's better that a failure in your tracing implementation doesn't poison your main application. _(although ideally it shouldn't fail silently)_
 
 All traces will receive their parent's attributes as well as their own, there is also a very minimal timing capability that adds elapsed time to `Event` and `Exit` traces
