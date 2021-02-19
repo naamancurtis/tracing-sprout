@@ -8,7 +8,7 @@ readme = "readme.md"
 keywords = ["tracing", "logging"]
 license = "MIT"
 repository = "https://github.com/naamancurtis/tracing-sprout"
-categores = ["development-tools::debugging"]
+categories = ["development-tools::debugging"]
 include = [
     "**/*.rs",
     "Cargo.toml",
