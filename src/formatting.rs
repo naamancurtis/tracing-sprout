@@ -32,14 +32,14 @@ use crate::Result;
 ///
 /// set_global_default(subscriber).expect("failed to set up global tracing subscriber")
 /// ```
-pub struct TrunkLayer<W: MakeWriter + 'static> {
+pub struct TrunkLayer<W: for<'a> MakeWriter<'a> + 'static> {
     writer: W,
     name: String,
 }
 
 impl<W> TrunkLayer<W>
 where
-    W: MakeWriter + 'static,
+    W: for<'a> MakeWriter<'a> + 'static,
 {
     /// Construct a new TrunkLayer to add to the Tracing Registry
     ///
@@ -69,9 +69,9 @@ where
 impl<S, W> Layer<S> for TrunkLayer<W>
 where
     S: Subscriber + for<'a> LookupSpan<'a>,
-    W: MakeWriter + 'static,
+    W: for<'a> MakeWriter<'a> + 'static,
 {
-    fn new_span(&self, attrs: &Attributes<'_>, id: &Id, ctx: Context<'_, S>) {
+    fn on_new_span(&self, attrs: &Attributes<'_>, id: &Id, ctx: Context<'_, S>) {
         if let Some(span) = ctx.span(id) {
             // We want to inherit the fields from the parent span, if there is one.
             let mut visitor = if let Some(parent_span) = span.parent() {
@@ -93,7 +93,7 @@ where
             // Associate the visitor with the Span for future usage via the Span's extensions
             extensions.insert(visitor);
 
-            if let Ok(serialized) = serialize_span(attributes, &span.metadata(), Type::Enter) {
+            if let Ok(serialized) = serialize_span(attributes, span.metadata(), Type::Enter) {
                 let _ = self.emit(serialized);
             }
         } else {

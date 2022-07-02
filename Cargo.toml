@@ -1,6 +1,6 @@
 [package]
 name = "tracing_sprout"
-version = "0.1.0-alpha.2"
+version = "0.1.0-alpha.3"
 authors = ["Naaman Curtis <naaman.the.dev@gmail.com>"]
 edition = "2018"
 description = "A tokio-rs/tracing structured JSON formatting layer for the fledgling logger"
@@ -24,4 +24,7 @@ thiserror = "^1.0"
 tracing = "^0.1"
 tracing-core = "^0.1"
 tracing-log = "^0.1"
-tracing-subscriber = "^0.2"
+tracing-subscriber = { version = "^0.3", default-features = false, features = ["registry", "fmt"] }
+
+[dev-dependencies]
+tracing-subscriber = { version = "^0.3", default-features = false, features = ["registry", "fmt", "env-filter"] }
