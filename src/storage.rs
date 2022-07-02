@@ -22,10 +22,10 @@ impl Clone for SproutStorage {
 }
 
 impl SproutStorage {
-    pub fn new(name: &str, pid: u32) -> Self {
+    pub fn new(name: &str) -> Self {
         let attributes = object! {
-            "app_name": name,
-            "pid": pid
+            "name": name,
+            "version": env!("CARGO_PKG_VERSION")
         };
         Self {
             attributes,
@@ -53,28 +53,28 @@ impl Visit for SproutStorage {
     /// Visit a signed 64-bit integer value.
     fn record_i64(&mut self, field: &Field, value: i64) {
         self.attributes
-            .insert(&field.name(), value)
+            .insert(field.name(), value)
             .expect("Root should always be a json object");
     }
 
     /// Visit an unsigned 64-bit integer value.
     fn record_u64(&mut self, field: &Field, value: u64) {
         self.attributes
-            .insert(&field.name(), value)
+            .insert(field.name(), value)
             .expect("Root should always be a json object");
     }
 
     /// Visit a boolean value.
     fn record_bool(&mut self, field: &Field, value: bool) {
         self.attributes
-            .insert(&field.name(), value)
+            .insert(field.name(), value)
             .expect("Root should always be a json object");
     }
 
     /// Visit a string value.
     fn record_str(&mut self, field: &Field, value: &str) {
         self.attributes
-            .insert(&field.name(), value)
+            .insert(field.name(), value)
             .expect("Root should always be a json object");
     }
 
@@ -88,8 +88,17 @@ impl Visit for SproutStorage {
                     .expect("Root should always be a json object");
             }
             name => {
+                let val = format!("{:?}", value);
+                let val = if val.starts_with('[') && val.ends_with(']') {
+                    match json::parse(&val) {
+                        Ok(arr) => arr,
+                        Err(_) => val.into(),
+                    }
+                } else {
+                    val.into()
+                };
                 self.attributes
-                    .insert(name, format!("{:?}", value).as_str())
+                    .insert(name, val)
                     .expect("Root should always be a json object");
             }
         };

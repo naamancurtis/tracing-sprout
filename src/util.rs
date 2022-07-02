@@ -51,7 +51,6 @@ pub(crate) fn insert_core_fields(
     let level = metadata.level();
 
     obj.insert(TIME, now.to_rfc2822())?;
-    obj.insert(TIMESTAMP, now.timestamp())?;
     obj.insert(MESSAGE, msg)?;
     obj.insert(LEVEL, level_as_str(level))?;
 
@@ -61,9 +60,6 @@ pub(crate) fn insert_core_fields(
         }
         if let Some(line) = metadata.line() {
             obj.insert(LINE, line)?;
-        }
-        if let Some(module) = metadata.module_path() {
-            obj.insert(MODULE, module)?;
         }
         obj.insert(TARGET, metadata.target())?;
         let t = thread::current();

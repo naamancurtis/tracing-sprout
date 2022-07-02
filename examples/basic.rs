@@ -37,7 +37,7 @@ fn main() {
         let _child_guard = child_span.enter();
         let warning = "Don't get hit Groot!";
         dance();
-        warn!(%warning, "There are lots of bad guys");
+        warn!(%warning, goon_count = ?vec![5f64, 3.0, 24.32],  "There are lots of bad guys");
     }
 
     error!("Big explosions everywhere!");

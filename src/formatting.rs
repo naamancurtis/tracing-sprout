@@ -34,7 +34,6 @@ use crate::Result;
 /// ```
 pub struct TrunkLayer<W: MakeWriter + 'static> {
     writer: W,
-    pid: u32,
     name: String,
 }
 
@@ -52,11 +51,7 @@ where
     /// let layer = TrunkLayer::new("I am Groot".to_string(), std::io::stdout);
     /// ```
     pub fn new(name: String, writer: W) -> Self {
-        Self {
-            writer,
-            pid: std::process::id(),
-            name,
-        }
+        Self { writer, name }
     }
     /// Given a serialized byte array, this function will add a `\n` byte to the end and
     /// then flush the bytes into the writer that was provided when initializing the layer.
@@ -84,9 +79,9 @@ where
                 extensions
                     .get_mut::<SproutStorage>()
                     .cloned()
-                    .unwrap_or_else(|| SproutStorage::new(&self.name, self.pid))
+                    .unwrap_or_else(|| SproutStorage::new(&self.name))
             } else {
-                SproutStorage::new(&self.name, self.pid)
+                SproutStorage::new(&self.name)
             };
 
             let mut extensions = span.extensions_mut();
@@ -137,15 +132,11 @@ where
     fn on_event(&self, event: &Event<'_>, ctx: Context<'_, S>) {
         let mut visitor = ctx
             .lookup_current()
-            .map(|span| span.extensions_mut().get_mut::<SproutStorage>().cloned())
-            .flatten()
-            .unwrap_or_else(|| SproutStorage::new(&self.name, self.pid));
+            .and_then(|span| span.extensions_mut().get_mut::<SproutStorage>().cloned())
+            .unwrap_or_else(|| SproutStorage::new(&self.name));
 
         event.record(&mut visitor);
-        let elapsed: Option<u64> = visitor
-            .entered_at
-            .clone()
-            .map(|t| t.elapsed().as_millis() as u64);
+        let elapsed: Option<u64> = visitor.entered_at.map(|t| t.elapsed().as_millis() as u64);
         // It would be nice for it to have this value, but if it fails, it fails
         visitor.add_attribute_opt(TIME_SINCE_START, elapsed).ok();
         let metadata = event.metadata();
@@ -169,7 +160,7 @@ where
                 // It would be nice for it to have this value, but if it fails, it fails
                 visitor.add_attribute_opt(ELAPSED_MILLIS, elapsed).ok();
                 if let Ok(serialized) =
-                    serialize_span(visitor.clone_attributes(), &span.metadata(), Type::Exit)
+                    serialize_span(visitor.clone_attributes(), span.metadata(), Type::Exit)
                 {
                     let _ = self.emit(serialized);
                 }

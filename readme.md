@@ -47,10 +47,9 @@ set_global_default(subscriber).expect("failed to set up global tracing subscribe
 ### Raw JSON
 
 ```txt
-{"app_name":"I'm Groot","pid":2735,"id":"1","time":"Sat, 13 Feb 2021 14:16:15 +0000","timestamp":1613225775,"msg":"[EPIC MONTAGE | START]","level":"info","span.type":"enter"}
-{"app_name":"I'm Groot","pid":2735,"id":"1","group":"[\"Peter Quill\", \"Gamora\", \"Drax\", \"Rocket\"]","time":"Sat, 13 Feb 2021 14:16:15 +0000","timestamp":1613225775,"msg":"[EVENT] Trying to plug in the power","level":"trace","file":"examples/basic.rs","line":32,"module":"basic","target":"basic","thread_id":"ThreadId(1)","thread_name":"main","span.type":"event"}
-{"app_name":"I'm Groot","pid":2735,"id":"2","info":"I'm overwriting my parents ID","time":"Sat, 13 Feb 2021 14:16:15 +0000","timestamp":1613225775,"msg":"[MUSIC IS PLAYING | START]","level":"debug","file":"examples/basic.rs","line":34,"module":"basic","target":"basic","thread_id":"ThreadId(1)","thread_name":"main","span.type":"enter"}
-...
+{"name":"I'm Groot","version":"0.1.0-alpha.1","id":"1","time":"Sat, 02 Jul 2022 09:33:59 -0600","msg":"[EPIC MONTAGE | START]","level":"info","span_type":"enter"}
+{"name":"I'm Groot","version":"0.1.0-alpha.1","id":"1","group":["Peter Quill","Gamora","Drax","Rocket"],"time":"Sat, 02 Jul 2022 09:33:59 -0600","msg":"[EVENT] Trying to plug in the power","level":"trace","file":"examples/basic.rs","line":32,"target":"basic","thread_id":"ThreadId(1)","thread_name":"main","span_type":"event"}
+{"name":"I'm Groot","version":"0.1.0-alpha.1","id":"2","info":"I'm overwriting my parents ID","time":"Sat, 02 Jul 2022 09:33:59 -0600","msg":"[MUSIC IS PLAYING | START]","level":"debug","file":"examples/basic.rs","line":34,"target":"basic","thread_id":"ThreadId(1)","thread_name":"main","span_type":"enter"}
 ```
 
 ### Piped through CLI tool
@@ -58,31 +57,38 @@ set_global_default(subscriber).expect("failed to set up global tracing subscribe
 In this case the CLI tool used was [pino-pretty](https://github.com/pinojs/pino-pretty)
 
 ```txt
-[Sat, 13 Feb 2021 14:14:54 +0000] INFO (1331): [EPIC MONTAGE | START]
-    app_name: "I'm Groot"
+[Sat, 02 Jul 2022 09:34:55 -0600] INFO (I'm Groot): [EPIC MONTAGE | STA
+    version: "0.1.0-alpha.1"
     id: "1"
-    span.type: "enter"
-[Sat, 13 Feb 2021 14:14:54 +0000] TRACE (1331): [EVENT] Trying to plug in the power
-    app_name: "I'm Groot"
+    span_type: "enter"
+[Sat, 02 Jul 2022 09:34:55 -0600] TRACE (I'm Groot): [EVENT] Trying to
+    version: "0.1.0-alpha.1"
     id: "1"
-    group: "[\"Peter Quill\", \"Gamora\", \"Drax\", \"Rocket\"]"
+    group: [
+      "Peter Quill",
+      "Gamora",
+      "Drax",
+      "Rocket"
+    ]
     file: "examples/basic.rs"
     line: 32
-    module: "basic"
     target: "basic"
     thread_id: "ThreadId(1)"
     thread_name: "main"
-    span.type: "event"
-[Sat, 13 Feb 2021 14:14:54 +0000] DEBUG (1331): [MUSIC IS PLAYING | START]
-    app_name: "I'm Groot"
+    span_type: "event"
+[Sat, 02 Jul 2022 09:34:55 -0600] DEBUG (I'm Groot): [MUSIC IS PLAYING | START]
+    version: "0.1.0-alpha.1"
     id: "2"
     info: "I'm overwriting my parents ID"
     file: "examples/basic.rs"
     line: 34
-    module: "basic"
     target: "basic"
     thread_id: "ThreadId(1)"
     thread_name: "main"
-    span.type: "enter"
-    ...
+    span_type: "enter"
+[Sat, 02 Jul 2022 09:34:55 -0600] INFO (I'm Groot): [DANCE | START]
+    version: "0.1.0-alpha.1"
+    id: "2"
+    info: "I'm overwriting my parents ID"
+    span_type: "enter"
 ```
