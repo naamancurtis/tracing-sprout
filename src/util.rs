@@ -53,6 +53,7 @@ pub(crate) fn insert_core_fields(
     obj.insert(TIME, now.to_rfc2822())?;
     obj.insert(MESSAGE, msg)?;
     obj.insert(LEVEL, level_as_str(level))?;
+    obj.insert(TARGET, metadata.target())?;
 
     if matches!(*level, Level::TRACE | Level::DEBUG | Level::ERROR) {
         if let Some(file) = metadata.file() {
@@ -61,7 +62,6 @@ pub(crate) fn insert_core_fields(
         if let Some(line) = metadata.line() {
             obj.insert(LINE, line)?;
         }
-        obj.insert(TARGET, metadata.target())?;
         let t = thread::current();
         obj.insert(THREAD_ID, format!("{:?}", t.id()))?;
         obj.insert(THREAD_NAME, t.name().unwrap_or(""))?;

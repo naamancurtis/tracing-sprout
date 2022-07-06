@@ -1,6 +1,6 @@
 [package]
 name = "tracing_sprout"
-version = "0.1.0-alpha.3"
+version = "0.1.0-alpha.4"
 authors = ["Naaman Curtis <naaman.the.dev@gmail.com>"]
 edition = "2018"
 description = "A tokio-rs/tracing structured JSON formatting layer for the fledgling logger"
