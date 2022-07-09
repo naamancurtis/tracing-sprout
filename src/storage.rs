@@ -22,10 +22,10 @@ impl Clone for SproutStorage {
 }
 
 impl SproutStorage {
-    pub fn new(name: &str) -> Self {
+    pub fn new(name: &str, version: &str) -> Self {
         let attributes = object! {
             "name": name,
-            "version": env!("CARGO_PKG_VERSION")
+            "version": version
         };
         Self {
             attributes,

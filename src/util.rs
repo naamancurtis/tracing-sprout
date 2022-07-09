@@ -56,12 +56,6 @@ pub(crate) fn insert_core_fields(
     obj.insert(TARGET, metadata.target())?;
 
     if matches!(*level, Level::TRACE | Level::DEBUG | Level::ERROR) {
-        if let Some(file) = metadata.file() {
-            obj.insert(FILE, file)?;
-        }
-        if let Some(line) = metadata.line() {
-            obj.insert(LINE, line)?;
-        }
         let t = thread::current();
         obj.insert(THREAD_ID, format!("{:?}", t.id()))?;
         obj.insert(THREAD_NAME, t.name().unwrap_or(""))?;

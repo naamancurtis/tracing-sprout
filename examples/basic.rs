@@ -21,7 +21,11 @@ fn dance() {
 
 fn main() {
     let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("trace"));
-    let formatting_layer = TrunkLayer::new("I'm Groot".to_string(), std::io::stdout);
+    let formatting_layer = TrunkLayer::new(
+        "I'm Groot".to_string(),
+        env!("CARGO_PKG_VERSION").to_string(),
+        std::io::stdout,
+    );
     let subscriber = Registry::default().with(env_filter).with(formatting_layer);
 
     set_global_default(subscriber).expect("failed to set up global tracing subscriber");

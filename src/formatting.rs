@@ -34,6 +34,7 @@ use crate::Result;
 /// ```
 pub struct TrunkLayer<W: for<'a> MakeWriter<'a> + 'static> {
     writer: W,
+    version: String,
     name: String,
 }
 
@@ -50,8 +51,12 @@ where
     ///
     /// let layer = TrunkLayer::new("I am Groot".to_string(), std::io::stdout);
     /// ```
-    pub fn new(name: String, writer: W) -> Self {
-        Self { writer, name }
+    pub fn new(name: String, version: String, writer: W) -> Self {
+        Self {
+            writer,
+            version,
+            name,
+        }
     }
     /// Given a serialized byte array, this function will add a `\n` byte to the end and
     /// then flush the bytes into the writer that was provided when initializing the layer.
@@ -79,9 +84,9 @@ where
                 extensions
                     .get_mut::<SproutStorage>()
                     .cloned()
-                    .unwrap_or_else(|| SproutStorage::new(&self.name))
+                    .unwrap_or_else(|| SproutStorage::new(&self.name, &self.version))
             } else {
-                SproutStorage::new(&self.name)
+                SproutStorage::new(&self.name, &self.version)
             };
 
             let mut extensions = span.extensions_mut();
@@ -133,7 +138,7 @@ where
         let mut visitor = ctx
             .lookup_current()
             .and_then(|span| span.extensions_mut().get_mut::<SproutStorage>().cloned())
-            .unwrap_or_else(|| SproutStorage::new(&self.name));
+            .unwrap_or_else(|| SproutStorage::new(&self.name, &self.version));
 
         event.record(&mut visitor);
         let elapsed: Option<u64> = visitor.entered_at.map(|t| t.elapsed().as_millis() as u64);

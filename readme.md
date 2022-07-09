@@ -34,7 +34,7 @@ use tracing_subscriber::prelude::*;
 use tracing_subscriber::{EnvFilter, Registry};
 
 let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
-let formatting_layer = TrunkLayer::new("My Application".to_string(), std::io::stdout);
+let formatting_layer = TrunkLayer::new("My Application".to_string(), env!("CARGO_PKG_VERSION").to_string(), std::io::stdout);
 let subscriber = Registry::default()
      .with(env_filter)
      .with(formatting_layer);
