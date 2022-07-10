@@ -89,9 +89,11 @@ impl Visit for SproutStorage {
             }
             name => {
                 let val = format!("{:?}", value);
-                let val = if val.starts_with('[') && val.ends_with(']') {
+                let val = if (val.starts_with('[') && val.ends_with(']'))
+                    || (val.starts_with('{') && val.ends_with('}'))
+                {
                     match json::parse(&val) {
-                        Ok(arr) => arr,
+                        Ok(o) => o,
                         Err(_) => val.into(),
                     }
                 } else {

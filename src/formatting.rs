@@ -102,7 +102,7 @@ where
                 let _ = self.emit(serialized);
             }
         } else {
-            eprintln!("[SPROUT]: Expected to find Span ID when creating a new span. \n\tThis is likely a bug");
+            tracing::error!(target: "sprout", "Expected to find Span ID when creating a new span. This is likely a bug");
         }
     }
 
@@ -112,10 +112,10 @@ where
             if let Some(visitor) = extensions.get_mut::<SproutStorage>() {
                 values.record(visitor);
             } else {
-                eprintln!("[SPROUT]: Expected to find Sprout Storage located in the span when recording new attributes.\n\tThis is likely a bug");
+                tracing::error!(target: "sprout", "Expected to find Sprout Storage located in the span when recording new attributes. This is likely a bug");
             }
         } else {
-            eprintln!("[SPROUT]: Expected to find Span ID when recording span attributes.\n\tThis is likely a bug");
+            tracing::error!(target: "sprout","Expected to find Span ID when recording span attributes. This is likely a bug");
         }
     }
 
@@ -125,11 +125,11 @@ where
             if let Some(visitor) = extensions.get_mut::<SproutStorage>() {
                 visitor.entered_at = Some(Instant::now());
             } else {
-                eprintln!("[SPROUT]: Expected to find Sprout Storage located in the span when entering it.\n\tThis is likely a bug");
+                tracing::error!(target: "sprout", "Expected to find Sprout Storage located in the span when entering it. This is likely a bug");
             }
         } else {
-            eprintln!(
-                "[SPROUT]: Expected to find Span ID when entering span.\n\tThis is likely a bug"
+            tracing::error!(target: "sprout",
+                "Expected to find Span ID when entering span. This is likely a bug"
             );
         }
     }
@@ -148,8 +148,8 @@ where
         if let Ok(bytes) = serialize_span(visitor.attributes, metadata, Type::Event) {
             let _ = self.emit(bytes);
         } else {
-            eprintln!(
-                "[SPROUT]: Was unable to write event bytes to the writer.\n\tThis is likely a bug"
+            tracing::error!(target: "sprout",
+                "Was unable to write event bytes to the writer. This is likely a bug"
             );
         }
     }
@@ -171,8 +171,8 @@ where
                 }
             };
         } else {
-            eprintln!(
-                "[SPROUT]: Expected to find Span ID when closing span.\n\tThis is likely a bug"
+            tracing::error!(target: "sprout",
+                "Expected to find Span ID when closing span. This is likely a bug"
             );
         }
     }
